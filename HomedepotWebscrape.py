@@ -2,11 +2,13 @@
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup
+import os
 
 headers = {'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safari/537.36'}
-path = "C:\\Users\\Karina\\Downloads\\PREFERRED-PRICING-10.1.2018-REVISED-7.25.18.xlsx"
+# path = "C:\\Users\\Karina\\Downloads\\PREFERRED-PRICING-10.1.2018-REVISED-7.25.18.xlsx"
+path = os.getcwd()
 
-df = pd.read_excel( path )
+df = pd.read_excel( path + '/1PREFERRED-PRICING-10.1.2018-REVISED-7.25.18.xlsx', engine='openpyxl' )
 df = df[df['CATEGORY'] == 'Fabric Care']
 Model = df['MATERIAL']
 Price = df['PRICE 10/1/2018']
