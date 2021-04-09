@@ -11,7 +11,14 @@ This Python script reads an excel sheet of all the products we received as a Dis
 
 ## Deployment
 * Install dependencies using "pip install -r requirements.txt"
-
+* Download chromedriver, unzip and move to /usr/local/bin (mac/linux), for windows gogole how to install chromedriver and selenium.
+```
+sudo unzip {chromedriver.zip} -d /usr/bin
+```
+* Run the program in the terminal and it will run the script, make sure your terminal/ command line is in the folder path for this project
+```
+python HomedepotWebscrape.py
+```
 
 ## Todo
 * [] See if script still runs and works
