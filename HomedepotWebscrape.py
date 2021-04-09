@@ -8,7 +8,7 @@ headers = {'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleW
 # path = "C:\\Users\\Karina\\Downloads\\PREFERRED-PRICING-10.1.2018-REVISED-7.25.18.xlsx"
 path = os.getcwd()
 
-df = pd.read_excel( path + '/1PREFERRED-PRICING-10.1.2018-REVISED-7.25.18.xlsx', engine='openpyxl' )
+df = pd.read_excel( path + '/Appliance-Pricing-10-1-18.xlsx', engine='openpyxl' )
 df = df[df['CATEGORY'] == 'Fabric Care']
 Model = df['MATERIAL']
 Price = df['PRICE 10/1/2018']
@@ -28,6 +28,6 @@ for i in Model:
     df.loc[count,["hdprice"]] = hdprice.values()
     count += 1
 print(df)
-writer = pd.ExcelWriter(path)
-df.to_excel(writer)
-writer.save()
+# writer = pd.ExcelWriter(path)
+# df.to_excel(writer)
+# writer.save()
