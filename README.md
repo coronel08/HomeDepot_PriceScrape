@@ -2,7 +2,7 @@
 This project was created so that I could automatically update prices for several of our appliances/products automatically. Home Depot was our biggest competitor and to stay competitive with prices we would have to regularly adjust our prices based on their sales. 
 
 
-![preview-vid](https://github.com/coronel08/website-vid-project/blob/main//webscrape_vid.m4v)
+![preview-vid](https://github.com/coronel08/HomeDepot_PriceScrape/blob/master/webscrape_vid.m4v)
 The logging of the model + price in the terminal and the browser are just for show. It makes for a good video, would recommend running selenium browser silent.
 
 
