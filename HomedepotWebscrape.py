@@ -46,35 +46,44 @@ class HomeDepotBot():
             print(hdPrice)
 
 
-bot = HomeDepotBot()
-bot.webscrapeHomeDepot()
+def main():
+    bot = HomeDepotBot()
+    bot.webscrapeHomeDepot()
 
 
-# Selenium Section
-# bot = webdriver.Chrome()
-# bot.get('https://www.homedepot.com/p/Maytag-5-3-cu-ft-Smart-Capable-White-Top-Load-Washing-Machine-with-Extra-Power-Button-ENERGY-STAR-MVW7232HW/312273355')
-# price = bot.find_element_by_xpath(
-#     '//*[@id="eco-rebate-price"]/div[1]/div[2]/span[2]')
-# model = bot.find_element_by_xpath(
-#     '//*[@id="root"]/div/div[3]/div/div/div[2]/div/div[1]/div/div/h2[2]')
-# test = print(price.text, model.text)
+if __name__ == "__main__":
+    main()
 
-# Old Way, couldnt get working
-# for i in Model:
+
+# Using bs4 to webscrape (Not Working)
+# def bs4Webscrape():
+#     headers = {
+#         'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safari/537.36'}
 #     hdprice = {}
-#     response = requests.get(url='https://www.homedepot.com/s/'+i,headers=headers)
-#     page = BeautifulSoup(response.content, 'lxml')
-#     try:
-#         price = page.find('div', {'class': 'price__format'}).text.strip()
-#         model = page.find('h2', {'class': 'product-info-bar__detail--24WIp'}).text.strip()
-#         hdprice[i] = int(price)
-#     except AttributeError:
-#         hdprice[i] = "NA"
-#     print(hdprice)
-#     df.loc[count,["hdprice"]] = hdprice.values()
-#     count += 1
-# print(df)
+#     dataFile = os.getcwd() + '/Appliance-Pricing-10-1-18.xlsx'
 
-# writer = pd.ExcelWriter(path)
-# df.to_excel(writer)
-# writer.save()
+#     Read Excel File
+#     df = pd.read_excel(dataFile, engine='openpyxl')
+#     df = df[df['CATEGORY'] == 'Fabric Care']
+#     dfModel = df['MATERIAL']
+#     dfPrice = df['PRICE 10/1/2018']
+#     dfCount = 0
+#     testList = ['WGD4985EW', 'MVW7232HW', 'WED4616FW']
+#     for i in testList:
+#         response = requests.get(
+#             url='https://www.homedepot.com/s/'+i, headers=headers)
+#         page = BeautifulSoup(response.content, 'lxml')
+#         try:
+#             price = page.find('div', {'class': 'price-detailed__wrapper'}).text
+#             print(price)
+#             model = i
+#             hdprice[i] = int(price)
+#         except AttributeError:
+#             hdprice[i] = "NA"
+#         print(hdprice)
+#         df.loc[dfCount, ["hdprice"]] = hdprice.values()
+#         dfCount += 1
+
+#         writer = pd.ExcelWriter(path)
+#         df.to_excel(writer)
+#         writer.save()
