@@ -3,7 +3,7 @@ This project was created so that I could automatically update prices for several
 
 
 ![preview-vid](https://github.com/coronel08/HomeDepot_PriceScrape/blob/master/webscrape.gif)<br>
-The logging of the model + price in the terminal and the browser are just for show. It makes for a good video, would recommend running selenium browser silent.
+The logging of the model + price in the terminal and the browser are just for show. It makes for a good video, would recommend running selenium browser silent. Also I made sure to randomize the time between product searches so the IP doesn't get flagged for spamming the site. 
 
 
 This Python script reads an excel sheet of all the products we received as a Distributor for Whirlpool and Maytag Appliances and returns the prices from Home Depot. We use to compare our prices periodically and manually so this saved us hundreds of hours and helped us ensure we were giving the customers the best deal.
