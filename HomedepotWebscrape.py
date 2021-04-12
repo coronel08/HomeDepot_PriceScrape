@@ -10,45 +10,59 @@ import random
 import re
 
 
-class HomeDepotBot():
-    def __init__(self):
-        self.headers = {
-            'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safari/537.36'}
-        self.dataFile = os.getcwd() + '/Appliance-Pricing-10-1-18.xlsx'
+def main():
+    filename = '/Appliance-Pricing-10-1-18.xlsx'
+    bot = HomeDepotBot(filename)
+    bot.webscrapeHomeDepot()
 
-    def webscrapeHomeDepot(self):
-        self.driver = webdriver.Chrome()
+class ExcelFile:
+    def __init__(self, file):
+        self.dataFile = os.getcwd() + file
 
+    """ Uses Pandas to read excel file and return a series of the Model"""
+    def getModel(self):
         df = pd.read_excel(self.dataFile, engine='openpyxl')
         df = df[df['CATEGORY'] == 'Fabric Care']
         dfModel = df['MATERIAL']
         dfPrice = df['PRICE 10/1/2018']
-        dfCount = 0
-        testList = ['WGD4985EW', 'MVW7232HW', 'WED4616FW']
+        return dfModel
+    
+    def writeToExcelFile(self):
+        pass
 
-        # changed dfModel to testList for testing out in loop below
+class HomeDepotBot():
+    def __init__(self, file):
+        self.headers = {
+            'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safari/537.36'}
+        self.driver = webdriver.Chrome()
+        self.file = file
+        self.excelFile = ExcelFile(file)
+
+    def webscrapeHomeDepot(self):
+        dfModel = self.excelFile.getModel()
+        writeToExcelFile = self.excelFile.writeToExcelFile()
+        dfCount = 0
+        hdPrice = {}
+        # For testing homedepot Scrape, replace dfModel with testList in the loop below
+        # testList = ['WGD4985EW', 'MVW7232HW', 'WED4616FW']
+
         for i in dfModel:
-            hdPrice = {}
-            response = self.driver.get('https://www.homedepot.com/s/'+i)
+            model = i
+            response = self.driver.get('https://www.homedepot.com/s/'+ model)
             time.sleep(random.randint(1, 3))
             try:
                 priceWrapper = self.driver.find_element_by_class_name(
                     'price-detailed__wrapper').text
                 if (priceWrapper.__contains__('$')):
                     splitPrice = priceWrapper.split('$')
-                    price = int(splitPrice[1])//100
+                    hdPrice[model] = int(splitPrice[1])//100
                 else:
                     price = 'NA'
-                model = i
-                hdPrice[i] = price
+                    hdPrice[model] = price
             except (NoSuchElementException, StaleElementReferenceException):
-                hdPrice[i] = 'NA'
-            print(hdPrice)
-
-
-def main():
-    bot = HomeDepotBot()
-    bot.webscrapeHomeDepot()
+                hdPrice[model] = 'NA'
+            print(hdPrice[model])
+            dfCount += 1
 
 
 if __name__ == "__main__":
