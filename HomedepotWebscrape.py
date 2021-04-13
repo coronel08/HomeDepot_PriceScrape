@@ -26,7 +26,6 @@ class ExcelFile:
         self.dataFile = self.path + file
         df = pd.read_excel(self.dataFile, engine='openpyxl')
         self.df = df[df['CATEGORY'] == 'Fabric Care']
-        self.writer = pd.ExcelWriter(self.path + '/test_file.xlsx', engine='openpyxl')
 
     """ Uses Pandas to read excel file and return a series of the Model """
 
@@ -37,10 +36,13 @@ class ExcelFile:
 
     """ Figure out how to write to Column in another class"""
 
-    def writeToExcelFile(self, dfCount, hdPrice):
-        data = self.df.loc[dfCount, ["hdprice"]] = hdPrice.values()
-        data.to_excel(self.writer)
-        self.writer.save
+    def writeToExcelFile(self, hdPrice):
+        self.df["hdprice"] = hdPrice.values()
+        print('---------------Write to Excel --------------')
+        print(self.df)
+        # writer = pd.ExcelWriter(self.path, engine='openpyxl')
+        # self.df.to_excel(writer)
+        # writer.save
 
 
 class HomeDepotBot():
@@ -51,10 +53,9 @@ class HomeDepotBot():
 
     def webscrapeHomeDepot(self):
         dfModel = self.excelFile.getModel()
-        dfCount = 0
         hdPrice = {}
         # For testing homedepot Scrape, replace dfModel with testList in the loop below
-        # testList = ['WGD4985EW', 'MVW7232HW', 'WED4616FW']
+        testList = ['WGD4985EW', 'MVW7232HW', 'WED4616FW']
 
         for model in dfModel:
             response = self.driver.get('https://www.homedepot.com/s/' + model)
@@ -70,9 +71,7 @@ class HomeDepotBot():
             except (NoSuchElementException, StaleElementReferenceException):
                 hdPrice[model] = 'NA'
             print(hdPrice)
-            writeToExcelFile = self.excelFile.writeToExcelFile(dfCount, hdPrice)
-            dfCount += 1
-
+        writeToExcelFile = self.excelFile.writeToExcelFile(hdPrice)
 
 if __name__ == "__main__":
     main()
