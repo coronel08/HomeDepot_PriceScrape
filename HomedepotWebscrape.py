@@ -22,10 +22,11 @@ class ExcelFile:
     """
 
     def __init__(self, file):
-        self.dataFile = os.getcwd() + file
+        self.path = os.getcwd()
+        self.dataFile = self.path + file
         df = pd.read_excel(self.dataFile, engine='openpyxl')
         self.df = df[df['CATEGORY'] == 'Fabric Care']
-        # self.writer = pd.ExcelWriter(self.dataFile, engine='openpyxl')
+        self.writer = pd.ExcelWriter(self.path + '/test_file.xlsx', engine='openpyxl')
 
     """ Uses Pandas to read excel file and return a series of the Model """
 
@@ -37,8 +38,9 @@ class ExcelFile:
     """ Figure out how to write to Column in another class"""
 
     def writeToExcelFile(self, dfCount, hdPrice):
-        pass
-        # self.df.loc[dfCount, ["hdprice"]] = hdPrice.values()
+        data = self.df.loc[dfCount, ["hdprice"]] = hdPrice.values()
+        data.to_excel(self.writer)
+        self.writer.save
 
 
 class HomeDepotBot():
@@ -64,12 +66,11 @@ class HomeDepotBot():
                     splitPrice = priceWrapper.split('$')
                     hdPrice[model] = int(splitPrice[1])//100
                 else:
-                    price = 'NA'
-                    hdPrice[model] = price
+                    hdPrice[model] = 'NA'
             except (NoSuchElementException, StaleElementReferenceException):
                 hdPrice[model] = 'NA'
-            print(hdPrice[model])
-            writeToExcelFile = self.excelFile.writeToExcelFile(dfCount, hdPrice[model])
+            print(hdPrice)
+            writeToExcelFile = self.excelFile.writeToExcelFile(dfCount, hdPrice)
             dfCount += 1
 
 
