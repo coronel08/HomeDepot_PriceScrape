@@ -16,6 +16,11 @@ def main():
 
 
 class ExcelFile:
+    """ 
+    A class for dealing with excel files, returns two methods getModel and writeToExcelFiles
+    The excel file is defined in main and goes into HomeDepotBot class and then this class.
+    """
+
     def __init__(self, file):
         self.dataFile = os.getcwd() + file
         df = pd.read_excel(self.dataFile, engine='openpyxl')
@@ -44,8 +49,6 @@ class HomeDepotBot():
 
     def webscrapeHomeDepot(self):
         dfModel = self.excelFile.getModel()
-        # Figure out how to write to file later
-        writeToExcelFile = self.excelFile.writeToExcelFile()
         dfCount = 0
         hdPrice = {}
         # For testing homedepot Scrape, replace dfModel with testList in the loop below
@@ -66,6 +69,7 @@ class HomeDepotBot():
             except (NoSuchElementException, StaleElementReferenceException):
                 hdPrice[model] = 'NA'
             print(hdPrice[model])
+            writeToExcelFile = self.excelFile.writeToExcelFile(dfCount, hdPrice[model])
             dfCount += 1
 
 
