@@ -16,6 +16,7 @@ def main():
 class ExcelFile:
     def __init__(self, file):
         self.dataFile = os.getcwd() + file
+        # self.writer = pd.ExcelWriter(self.dataFile, engine='openpyxl')
 
     """ Uses Pandas to read excel file and return a series of the Model"""
     def getModel(self):

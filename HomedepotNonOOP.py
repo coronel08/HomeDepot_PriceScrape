@@ -43,6 +43,12 @@ def readExcelFile(file):
     print('Running readExcelFile function')
     return dfModel
 
+def writeExcel():
+    # writer = pd.ExcelWriter('testFile.xlsx',engine='xlsxwriter')
+    # import data to write    
+    # writer.save()
+    pass
+
 
 if __name__ == '__main__':
     main()
