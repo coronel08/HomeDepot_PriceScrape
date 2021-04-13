@@ -7,8 +7,6 @@ from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
 import time
 import random
-import re
-
 
 def main():
     filename = '/Appliance-Pricing-10-1-18.xlsx'
