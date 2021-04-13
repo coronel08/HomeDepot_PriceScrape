@@ -8,46 +8,51 @@ from selenium.common.exceptions import NoSuchElementException, StaleElementRefer
 import time
 import random
 
+
 def main():
     filename = '/Appliance-Pricing-10-1-18.xlsx'
     bot = HomeDepotBot(filename)
     bot.webscrapeHomeDepot()
 
+
 class ExcelFile:
     def __init__(self, file):
         self.dataFile = os.getcwd() + file
+        df = pd.read_excel(self.dataFile, engine='openpyxl')
+        self.df = df[df['CATEGORY'] == 'Fabric Care']
         # self.writer = pd.ExcelWriter(self.dataFile, engine='openpyxl')
 
-    """ Uses Pandas to read excel file and return a series of the Model"""
+    """ Uses Pandas to read excel file and return a series of the Model """
+
     def getModel(self):
-        df = pd.read_excel(self.dataFile, engine='openpyxl')
-        df = df[df['CATEGORY'] == 'Fabric Care']
-        dfModel = df['MATERIAL']
-        dfPrice = df['PRICE 10/1/2018']
+        dfModel = self.df['MATERIAL']
+        dfPrice = self.df['PRICE 10/1/2018']
         return dfModel
-    
-    def writeToExcelFile(self):
+
+    """ Figure out how to write to Column in another class"""
+
+    def writeToExcelFile(self, dfCount, hdPrice):
         pass
+        # self.df.loc[dfCount, ["hdprice"]] = hdPrice.values()
+
 
 class HomeDepotBot():
     def __init__(self, file):
-        self.headers = {
-            'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safari/537.36'}
         self.driver = webdriver.Chrome()
         self.file = file
         self.excelFile = ExcelFile(file)
 
     def webscrapeHomeDepot(self):
         dfModel = self.excelFile.getModel()
+        # Figure out how to write to file later
         writeToExcelFile = self.excelFile.writeToExcelFile()
         dfCount = 0
         hdPrice = {}
         # For testing homedepot Scrape, replace dfModel with testList in the loop below
         # testList = ['WGD4985EW', 'MVW7232HW', 'WED4616FW']
 
-        for i in dfModel:
-            model = i
-            response = self.driver.get('https://www.homedepot.com/s/'+ model)
+        for model in dfModel:
+            response = self.driver.get('https://www.homedepot.com/s/' + model)
             time.sleep(random.randint(1, 3))
             try:
                 priceWrapper = self.driver.find_element_by_class_name(
