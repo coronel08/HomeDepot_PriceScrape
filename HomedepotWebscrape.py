@@ -34,14 +34,13 @@ class ExcelFile:
         dfPrice = self.df['PRICE 10/1/2018']
         return dfModel
 
-    """ Figure out how to write to Column in another class"""
+    """ Method writes pandas dataframe to new excel file called test.xlsx"""
 
     def writeToExcelFile(self, hdPrice):
         self.df["hdprice"] = hdPrice.values()
         print('---------------Write to Excel --------------')
-        print(self.df)
+        self.df.to_excel('test.xlsx', sheet_name='sheet1')
         # writer = pd.ExcelWriter(self.path, engine='openpyxl')
-        # self.df.to_excel(writer)
         # writer.save
 
 
@@ -55,7 +54,7 @@ class HomeDepotBot():
         dfModel = self.excelFile.getModel()
         hdPrice = {}
         # For testing homedepot Scrape, replace dfModel with testList in the loop below
-        testList = ['WGD4985EW', 'MVW7232HW', 'WED4616FW']
+        # testList = ['WGD4985EW', 'MVW7232HW', 'WED4616FW']
 
         for model in dfModel:
             response = self.driver.get('https://www.homedepot.com/s/' + model)
@@ -70,7 +69,7 @@ class HomeDepotBot():
                     hdPrice[model] = 'NA'
             except (NoSuchElementException, StaleElementReferenceException):
                 hdPrice[model] = 'NA'
-            print(hdPrice)
+            print(model, hdPrice[model])
         writeToExcelFile = self.excelFile.writeToExcelFile(hdPrice)
 
 if __name__ == "__main__":
