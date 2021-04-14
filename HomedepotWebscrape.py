@@ -22,7 +22,7 @@ class ExcelFile:
     """
 
     def __init__(self, file):
-        self.path = os.getcwd()
+        self.path = os.getcwd() + '/data_files'
         self.dataFile = self.path + file
         df = pd.read_excel(self.dataFile, engine='openpyxl')
         self.df = df[df['CATEGORY'] == 'Fabric Care']
@@ -39,7 +39,7 @@ class ExcelFile:
     def writeToExcelFile(self, hdPrice):
         self.df["hdprice"] = hdPrice.values()
         print('---------------Write to Excel --------------')
-        self.df.to_excel('test.xlsx', sheet_name='sheet1')
+        self.df.to_excel('Script_export.xlsx', sheet_name='sheet1')
         # writer = pd.ExcelWriter(self.path, engine='openpyxl')
         # writer.save
 
