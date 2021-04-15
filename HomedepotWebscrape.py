@@ -15,19 +15,17 @@ def main():
     bot.webscrapeHomeDepot()
 
 
-class ExcelFile:
+class HomeDepotBot():
     """ 
-    A class for dealing with excel files, returns two methods getModel and writeToExcelFiles
-    The excel file is defined in main and goes into HomeDepotBot class and then this class.
+    A class that takes the excel file in /data_files provided in the main() function and scrapes the Home Depot Website for pricing on the appliance by model #
     """
 
     def __init__(self, file):
+        self.driver = webdriver.Chrome()
         self.path = os.path.join(os.getcwd(), 'data_files')
-        self.dataFile = os.path.join(os.getcwd(), 'data_files', file) 
+        self.dataFile = os.path.join(self.path, file)
         df = pd.read_excel(self.dataFile, engine='openpyxl')
         self.df = df[df['CATEGORY'] == 'Fabric Care']
-
-    """ Uses Pandas to read excel file and return a series of the Model """
 
     def getModel(self):
         dfModel = self.df['MATERIAL']
@@ -40,18 +38,14 @@ class ExcelFile:
         self.df["hdprice"] = hdPrice.values()
         print('---------------Write to Excel --------------')
         self.df.to_excel('Script_export.xlsx', sheet_name='sheet1')
-        # writer = pd.ExcelWriter(self.path, engine='openpyxl')
-        # writer.save
 
-
-class HomeDepotBot():
-    def __init__(self, file):
-        self.driver = webdriver.Chrome()
-        self.file = file
-        self.excelFile = ExcelFile(file)
+    """ 
+    Method to run the webscraper bot. It iterates through a list of model #'s and returns a dataframe with competitors pricing. 
+    Writes to a new excel file in main directory
+    """
 
     def webscrapeHomeDepot(self):
-        dfModel = self.excelFile.getModel()
+        dfModel = self.getModel()
         hdPrice = {}
         # For testing homedepot Scrape, replace dfModel with testList in the loop below
         # testList = ['WGD4985EW', 'MVW7232HW', 'WED4616FW']
@@ -70,7 +64,8 @@ class HomeDepotBot():
             except (NoSuchElementException, StaleElementReferenceException):
                 hdPrice[model] = 'NA'
             print(model, hdPrice[model])
-        writeToExcelFile = self.excelFile.writeToExcelFile(hdPrice)
+        writeToExcelFile = self.writeToExcelFile(hdPrice)
+
 
 if __name__ == "__main__":
     main()
