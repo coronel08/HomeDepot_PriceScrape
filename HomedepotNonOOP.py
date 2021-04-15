@@ -8,15 +8,23 @@ from selenium.common.exceptions import NoSuchElementException, StaleElementRefer
 
 # Without Object Oriented programming
 def main():
-    seleniumWebScrape()
+    file = "Appliance-Pricing-10-1-18.xlsx"
+    seleniumWebScrape(file)
 
 
-def seleniumWebScrape():
+def seleniumWebScrape(file):
     driver = webdriver.Chrome()
+    # Read Excel File
+    dataFile = os.path.join(os.getcwd(), 'data_files', file)
+    df = pd.read_excel(dataFile, engine='openpyxl')
+    df = df[df['CATEGORY'] == 'Fabric Care']
+
     hdPrice = {}
     dfCount = 0
+    dfModel = df['MATERIAL']
+    # List below used for testing scraping
     testList = ['WGD4985EW', 'MVW7232HW', 'WED4616FW']
-    for model in testList:
+    for model in dfModel:
         resposne = driver.get('https://www.homedepot.com/s/' + model)
         time.sleep(random.randint(1, 3))
         try:
@@ -29,25 +37,15 @@ def seleniumWebScrape():
                 hdPrice[model] = 'NA'
         except (NoSuchElementException, StaleElementReferenceException):
             hdPrice[model] = 'NA'
-        print(hdPrice)
+        print(model, hdPrice[model])
+        # Need to figure out how to write to last column in excel file
+        # test = df.insert(1, "hdPrice", hdPrice[model])
+        # print(test)
         dfCount += 1
 
-
-def readExcelFile(file):
-    filename = file
-    data = os.getcwd() + filename
-    df = pd.read_excel(data, engine='openpyxl')
-    df = df[df['CATEGORY'] == 'Fabric Care']
-    dfModel = df['MATERIAL']
-    dfPrice = df['PRICE 10/1/2018']
-    print('Running readExcelFile function')
-    return dfModel
-
-def writeExcel():
-    # writer = pd.ExcelWriter('testFile.xlsx',engine='xlsxwriter')
-    # import data to write    
-    # writer.save()
-    pass
+        # writer = pd.ExcelWriter(dataFile)
+        # df.to_excel(writer)
+        # writer.save
 
 
 if __name__ == '__main__':
