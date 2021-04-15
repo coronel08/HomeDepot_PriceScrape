@@ -10,7 +10,7 @@ import random
 
 
 def main():
-    filename = '/Appliance-Pricing-10-1-18.xlsx'
+    filename = 'Appliance-Pricing-10-1-18.xlsx'
     bot = HomeDepotBot(filename)
     bot.webscrapeHomeDepot()
 
@@ -22,8 +22,8 @@ class ExcelFile:
     """
 
     def __init__(self, file):
-        self.path = os.getcwd() + '/data_files'
-        self.dataFile = self.path + file
+        self.path = os.path.join(os.getcwd(), 'data_files')
+        self.dataFile = os.path.join(os.getcwd(), 'data_files', file) 
         df = pd.read_excel(self.dataFile, engine='openpyxl')
         self.df = df[df['CATEGORY'] == 'Fabric Care']
 
