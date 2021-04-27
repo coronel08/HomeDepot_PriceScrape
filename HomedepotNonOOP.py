@@ -6,10 +6,12 @@ import pandas as pd
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
 
+
 def main():
     file = "Appliance-Pricing-10-1-18.xlsx"
     driver = webdriver.Chrome()
     seleniumWebScrape(file, driver)
+
 
 def seleniumWebScrape(file, driver):
     """ Webscrapes HomeDepot website and writes to a new file """
@@ -20,19 +22,7 @@ def seleniumWebScrape(file, driver):
     # testList = ['WGD4985EW', 'MVW7232HW', 'WED4616FW']
 
     for model in dfModel:
-        resposne = driver.get('https://www.homedepot.com/s/' + model)
-        time.sleep(random.randint(1, 3))
-        try:
-            priceWrapper = driver.find_element_by_class_name(
-                'price-detailed__wrapper').text
-            if (priceWrapper.__contains__('$')):
-                _, price, *trash = priceWrapper.split('$')
-                hdPrice[model] = int(price)//100
-            else:
-                hdPrice[model] = 'NA'
-        except (NoSuchElementException, StaleElementReferenceException):
-            hdPrice[model] = 'NA'
-        print(model, hdPrice[model])
+        scrapeModelPrice(driver, model, hdPrice)
     writeFile(df, hdPrice)
 
 
@@ -49,6 +39,26 @@ def getModel(df):
     df = df[df['CATEGORY'] == 'Fabric Care']
     dfModel = df['MATERIAL']
     return dfModel
+
+
+def scrapeModelPrice(driver, model, hdPrice):
+    """ 
+    Searches appliance models for price, if no price available returns NA  
+    Also prints out model and price 
+    """
+    resposne = driver.get('https://www.homedepot.com/s/' + model)
+    time.sleep(random.randint(1, 3))
+    try:
+        priceWrapper = driver.find_element_by_class_name(
+            'price-detailed__wrapper').text
+        if (priceWrapper.__contains__('$')):
+            _, price, *trash = priceWrapper.split('$')
+            hdPrice[model] = int(price)//100
+        else:
+            hdPrice[model] = 'NA'
+    except (NoSuchElementException, StaleElementReferenceException):
+        hdPrice[model] = 'NA'
+    print(model, hdPrice[model])
 
 
 def writeFile(df, hdPrice):
