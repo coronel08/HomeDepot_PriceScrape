@@ -57,8 +57,8 @@ class HomeDepotBot():
                 priceWrapper = self.driver.find_element_by_class_name(
                     'price-detailed__wrapper').text
                 if (priceWrapper.__contains__('$')):
-                    splitPrice = priceWrapper.split('$')
-                    hdPrice[model] = int(splitPrice[1])//100
+                    _, price, *trash = priceWrapper.split('$')
+                    hdPrice[model] = int(price)//100
                 else:
                     hdPrice[model] = 'NA'
             except (NoSuchElementException, StaleElementReferenceException):

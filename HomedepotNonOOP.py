@@ -6,24 +6,19 @@ import pandas as pd
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
 
-# Without Object Oriented programming
 def main():
     file = "Appliance-Pricing-10-1-18.xlsx"
-    seleniumWebScrape(file)
-
-
-def seleniumWebScrape(file):
     driver = webdriver.Chrome()
-    # Read Excel File
-    dataFile = os.path.join(os.getcwd(), 'data_files', file)
-    df = pd.read_excel(dataFile, engine='openpyxl')
-    df = df[df['CATEGORY'] == 'Fabric Care']
+    seleniumWebScrape(file, driver)
 
+def seleniumWebScrape(file, driver):
+    """ Webscrapes HomeDepot website and writes to a new file """
     hdPrice = {}
-    dfCount = 0
-    dfModel = df['MATERIAL']
+    df = readFile(file)
+    dfModel = getModel(df)
     # List below used for testing scraping
-    testList = ['WGD4985EW', 'MVW7232HW', 'WED4616FW']
+    # testList = ['WGD4985EW', 'MVW7232HW', 'WED4616FW']
+
     for model in dfModel:
         resposne = driver.get('https://www.homedepot.com/s/' + model)
         time.sleep(random.randint(1, 3))
@@ -31,22 +26,36 @@ def seleniumWebScrape(file):
             priceWrapper = driver.find_element_by_class_name(
                 'price-detailed__wrapper').text
             if (priceWrapper.__contains__('$')):
-                splitPrice = priceWrapper.split('$')
-                hdPrice[model] = int(splitPrice[1])//100
+                _, price, *trash = priceWrapper.split('$')
+                hdPrice[model] = int(price)//100
             else:
                 hdPrice[model] = 'NA'
         except (NoSuchElementException, StaleElementReferenceException):
             hdPrice[model] = 'NA'
         print(model, hdPrice[model])
-        # Need to figure out how to write to last column in excel file
-        # test = df.insert(1, "hdPrice", hdPrice[model])
-        # print(test)
-        dfCount += 1
-
-        # writer = pd.ExcelWriter(dataFile)
-        # df.to_excel(writer)
-        # writer.save
+    writeFile(df, hdPrice)
 
 
-if __name__ == '__main__':
+def readFile(file):
+    """ Reads excel file and returns a df """
+    path = os.path.join(os.getcwd(), 'data_files')
+    dataFile = os.path.join(path, file)
+    df = pd.read_excel(dataFile, engine='openpyxl')
+    return df
+
+
+def getModel(df):
+    """ Returns the model number for the appliances SeleniumWebscraper function """
+    df = df[df['CATEGORY'] == 'Fabric Care']
+    dfModel = df['MATERIAL']
+    return dfModel
+
+
+def writeFile(df, hdPrice):
+    print('Writing to Excel File ...')
+    df["hdprice"] = hdPrice.values()
+    df.to_excel('export.xlsx', sheet_name='sheet1')
+
+
+if __name__ == "__main__":
     main()
