@@ -5,11 +5,14 @@ import requests
 import pandas as pd
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
+from webdriver_manager.chrome import ChromeDriverManager
+import csv
+# from dotenv import load_dotenv
 
 
 def main():
     file = "Appliance-Pricing-10-1-18.xlsx"
-    driver = webdriver.Chrome()
+    driver = webdriver.Chrome(ChromeDriverManager().install())
     seleniumWebScrape(file, driver)
 
 
