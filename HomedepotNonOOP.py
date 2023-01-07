@@ -22,11 +22,11 @@ def seleniumWebScrape(file, driver):
     df = readFile(file)
     dfModel = getModel(df)
     # List below used for testing scraping
-    # testList = ['WGD4985EW', 'MVW7232HW', 'WED4616FW']
+    testList = ['WGD4985EW', 'MVW7232HW', 'WED4616FW']
 
-    for model in dfModel:
+    for model in testList:
         scrapeModelPrice(driver, model, hdPrice)
-    writeFile(df, hdPrice)
+    # writeFile(df, hdPrice)
 
 
 def readFile(file):
