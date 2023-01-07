@@ -1,3 +1,4 @@
+autopep8==1.5.6
 beautifulsoup4==4.9.3
 certifi==2020.12.5
 chardet==4.0.0
@@ -7,10 +8,13 @@ lxml==4.6.3
 numpy==1.20.2
 openpyxl==3.0.7
 pandas==1.2.3
+pycodestyle==2.7.0
 python-dateutil==2.8.1
 pytz==2021.1
 requests==2.25.1
+selenium==3.141.0
 six==1.15.0
 soupsieve==2.2.1
+toml==0.10.2
 urllib3==1.26.4
 xlrd==2.0.1
