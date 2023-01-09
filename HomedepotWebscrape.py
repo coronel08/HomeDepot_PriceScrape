@@ -7,6 +7,8 @@ from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
 import time
 import random
+from webdriver_manager.chrome import ChromeDriverManager
+import re
 
 
 def main():
@@ -21,7 +23,7 @@ class HomeDepotBot():
     """
 
     def __init__(self, file):
-        self.driver = webdriver.Chrome()
+        self.driver = webdriver.Chrome(ChromeDriverManager().install())
         self.path = os.path.join(os.getcwd(), 'data_files')
         self.dataFile = os.path.join(self.path, file)
         df = pd.read_excel(self.dataFile, engine='openpyxl')
@@ -58,6 +60,7 @@ class HomeDepotBot():
                     'price-detailed__wrapper').text
                 if (priceWrapper.__contains__('$')):
                     _, price, *trash = priceWrapper.split('$')
+                    price = re.search(r'\d+', price).group()
                     hdPrice[model] = int(price)//100
                 else:
                     hdPrice[model] = 'NA'

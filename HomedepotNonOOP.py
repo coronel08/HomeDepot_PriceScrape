@@ -7,6 +7,7 @@ from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
 from webdriver_manager.chrome import ChromeDriverManager
 import csv
+import re
 # from dotenv import load_dotenv
 
 
@@ -56,6 +57,7 @@ def scrapeModelPrice(driver, model, hdPrice):
             'price-detailed__wrapper').text
         if (priceWrapper.__contains__('$')):
             _, price, *trash = priceWrapper.split('$')
+            price = re.search(r'\d+', price).group()
             hdPrice[model] = int(price)//100
         else:
             hdPrice[model] = 'NA'
